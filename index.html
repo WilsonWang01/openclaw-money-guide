@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 自动化挣钱方案 — 调研报告</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b10;--bg2:#12141d;--bg3:#1a1d2b;--border:#252940;--text:#e8eaf0;--text2:#8b90a5;--accent:#818cf8;--accent2:#6366f1;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--orange:#fb923c;--blue:#60a5fa;--pink:#f472b6;--teal:#2dd4bf}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.container{max-width:960px;margin:0 auto;padding:24px}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+.hero{text-align:center;padding:60px 0 40px}
+.hero h1{font-size:2.4em;font-weight:800;background:linear-gradient(135deg,#818cf8,#34d399,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero p{color:var(--text2);font-size:1.05em;max-width:640px;margin:0 auto}
+.hero .meta{margin-top:16px;font-size:.82em;color:var(--text2)}
+.hero .meta span{background:var(--bg3);padding:4px 12px;border-radius:20px;margin:0 4px}
+
+.summary{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(52,211,153,.08));border:1px solid var(--border);border-radius:16px;padding:28px;margin:30px 0}
+.summary h2{font-size:1.1em;color:var(--accent);margin-bottom:12px}
+.summary .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.summary .stat{background:var(--bg2);border-radius:12px;padding:16px;text-align:center}
+.summary .stat .num{font-size:1.8em;font-weight:800;color:var(--green)}
+.summary .stat .label{font-size:.78em;color:var(--text2);margin-top:4px}
+
+.section{margin:40px 0}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-header .icon{font-size:1.6em}
+.section-header h2{font-size:1.3em;font-weight:700}
+.section-header .badge{font-size:.72em;padding:3px 12px;border-radius:12px;color:#fff}
+.badge-hot{background:var(--red)}.badge-rec{background:var(--green)}.badge-adv{background:var(--accent2)}.badge-you{background:var(--orange)}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:all .25s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,102,241,.1)}
+.card-head{padding:18px 22px;cursor:pointer;display:flex;align-items:center;gap:14px}
+.card-head .emoji{font-size:1.4em;flex-shrink:0}
+.card-head .info{flex:1}
+.card-head .title{font-weight:700;font-size:.98em}
+.card-head .subtitle{font-size:.8em;color:var(--text2);margin-top:2px}
+.card-head .arrow{color:var(--text2);transition:transform .2s;font-size:.85em}
+.card.open .card-head .arrow{transform:rotate(90deg)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 22px 14px}
+.tag{font-size:.68em;padding:3px 10px;border-radius:10px}
+.tag-money{background:rgba(52,211,153,.12);color:var(--green)}
+.tag-effort{background:rgba(251,191,36,.12);color:var(--yellow)}
+.tag-time{background:rgba(96,165,250,.12);color:var(--blue)}
+.tag-fit{background:rgba(244,114,182,.12);color:var(--pink)}
+.tag-auto{background:rgba(45,212,191,.12);color:var(--teal)}
+.card-body{display:none;padding:0 22px 22px}
+.card.open .card-body{display:block}
+.card-body h4{color:var(--accent);font-size:.88em;margin:14px 0 6px;font-weight:600}
+.card-body p,.card-body li{font-size:.86em;color:var(--text2)}
+.card-body ul{padding-left:20px}
+.card-body li{margin-bottom:5px}
+.card-body pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin:8px 0;overflow-x:auto;font-size:.8em;color:var(--green)}
+.card-body .highlight{background:rgba(129,140,248,.08);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+.card-body .highlight p{color:var(--text);font-size:.84em}
+.card-body .source{font-size:.75em;color:var(--text2);margin-top:8px;font-style:italic}
+
+.warning{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:20px;margin:30px 0}
+.warning h3{color:var(--yellow);font-size:.95em;margin-bottom:8px}
+.warning li{font-size:.84em;color:var(--text2);margin-bottom:4px}
+
+.roadmap{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:28px;margin:30px 0}
+.roadmap h2{color:var(--accent);font-size:1.1em;margin-bottom:16px}
+.roadmap .step{display:flex;gap:16px;margin-bottom:20px}
+.roadmap .step .num{width:36px;height:36px;border-radius:50%;background:var(--accent2);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85em;flex-shrink:0}
+.roadmap .step .content h4{font-size:.9em;font-weight:600;margin-bottom:4px}
+.roadmap .step .content p{font-size:.82em;color:var(--text2)}
+
+.footer{text-align:center;padding:40px 0;color:var(--text2);font-size:.78em;border-top:1px solid var(--border);margin-top:30px}
+
+@media(max-width:600px){.container{padding:14px}.hero h1{font-size:1.6em}.summary .grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+<h1>🦞💰 OpenClaw 自动化挣钱方案</h1>
+<p>从调研到落地，独立开发者用 OpenClaw 自动化挖掘收入的实战指南</p>
+<div class="meta">
+<span>📅 2026-02-11</span>
+<span>🔍 数据源：GitHub・Reddit・Twitter・技术博客</span>
+<span>🎯 为独立开发者定制</span>
+</div>
+</div>
+
+<div class="summary">
+<h2>📊 调研概览</h2>
+<div class="grid">
+<div class="stat"><div class="num">12</div><div class="label">已验证的可行方案</div></div>
+<div class="stat"><div class="num">$100-5K</div><div class="label">月收入范围</div></div>
+<div class="stat"><div class="num">$50</div><div class="label">平均月 API 成本</div></div>
+<div class="stat"><div class="num">4大类</div><div class="label">收入模式</div></div>
+</div>
+</div>
+
+<!-- === 第一类：卖铲子 === -->
+<div class="section">
+<div class="section-header"><span class="icon">⛏️</span><h2>第一类：卖铲子（基础设施服务）</h2><span class="badge badge-hot">竞争少、利润高</span></div>
+
+<div class="card" data-id="s1"><div class="card-head"><span class="emoji">🛡️</span><div class="info"><div class="title">OpenClaw 部署 + 安全加固服务</div><div class="subtitle">为非技术用户提供一键部署、安全审计、持续维护</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $500-2000/单</span><span class="tag tag-effort">⚙️ 中等努力</span><span class="tag tag-time">⏰ 1-2周启动</span></div>
+<div class="card-body">
+<div class="highlight"><p><strong>为什么可行？</strong> OpenClaw 创始人明确说"不是为非技术用户设计的"，但设置服务正在起步（DigitalOcean、阿里云、腾讯云都在抢托管）。你已有实战经验。</p></div>
+<h4>📝 具体做法</h4>
+<ul>
+<li>在 Fiverr/闲鱼/小红书 上架"开箱即用 AI 助手部署"服务</li>
+<li>包含：VPS 搭建 + 安全加固 + Telegram/微信对接 + 7天售后</li>
+<li>用你已有的 backup 脚本和 watchdog 作为增值服务</li>
+</ul>
+<h4>📈 收入模型</h4>
+<p>一次性部署费 $200-500 + 月维护 $50-100。服务5个客户 = $450-1000/月被动收入。</p>
+<div class="source">来源：Reddit r/AskVibecoders、superframeworks.com</div>
+</div></div>
+
+<div class="card" data-id="s2"><div class="card-head"><span class="emoji">📊</span><div class="info"><div class="title">成本管理仪表盘 / 审计工具</div><div class="subtitle">解决用户 API 费用失控的共性痛点（有人月费 $3600）</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $29-99/月订阅</span><span class="tag tag-effort">⚙️ 高努力</span><span class="tag tag-time">⏰ 4-6周开发</span></div>
+<div class="card-body">
+<div class="highlight"><p>有用户月费 $3600，核心原因是模型选择不当 + 心跳配置浪费。你刚刚学过这些优化技巧，可以产品化。</p></div>
+<ul>
+<li>开发一个 SaaS 仪表盘：实时监控 API 调用、模型使用、token 消耗</li>
+<li>提供自动优化建议（换模型、调心跳频率、加 contextPruning）</li>
+<li>目标客户：所有 OpenClaw 用户（150K+ GitHub stars）</li>
+</ul>
+<div class="source">来源：NotebookCheck 报道、superframeworks.com</div>
+</div></div>
+
+<div class="card" data-id="s3"><div class="card-head"><span class="emoji">🧩</span><div class="info"><div class="title">ClawHub 技能市场卖家</div><div class="subtitle">开发垂直领域技能，在 ClawHub 上售卖（已有2个卖家报告 $100-1000/月）</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $100-1000/月被动</span><span class="tag tag-effort">⚙️ 中等努力</span><span class="tag tag-auto">🤖 可自动化</span></div>
+<div class="card-body">
+<div class="highlight"><p>ClawHub 目前只有 700+ 技能，市场早期。每个技能就是一个 SKILL.md + 脚本文件夹，你已经有技能开发经验。</p></div>
+<h4>高价值技能方向</h4>
+<ul>
+<li><strong>Shopify 库存管理</strong>：自动监控库存 + 价格调整建议</li>
+<li><strong>房产中介跟进</strong>：自动发送跟进消息 + 客户意向分析</li>
+<li><strong>播客生产流水线</strong>：录音→转文→切片→多平台分发</li>
+<li><strong>A股监控助手</strong>：定时扫描行情 + 新闻 + 生成分析报告（你正在用！）</li>
+</ul>
+<div class="source">来源：superframeworks.com、ClawHub 市场数据</div>
+</div></div>
+</div>
+
+<!-- === 第二类：内容自动化 === -->
+<div class="section">
+<div class="section-header"><span class="icon">📱</span><h2>第二类：内容自动化变现</h2><span class="badge badge-rec">最适合独立开发者</span></div>
+
+<div class="card" data-id="s4"><div class="card-head"><span class="emoji">📰</span><div class="info"><div class="title">全自动垂直领域内容号</div><div class="subtitle">RSS 监控 → AI 生成观点 → 自动发布到 X/小红书/TikTok</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $200-2000/月</span><span class="tag tag-auto">🤖 90%自动化</span><span class="tag tag-fit">🎯 你已有基础</span><span class="tag tag-time">⏰ 1周启动</span></div>
+<div class="card-body">
+<div class="highlight"><p>你已经有 rss-ai-reader 技能、X 发布技能、小红书技能，就差一个 cron 串起来。</p></div>
+<h4>📝 具体流水线</h4>
+<ol>
+<li><strong>cron 定时触发</strong>（每天 3 次）：扫描 RSS/新闻源</li>
+<li><strong>AI 生成内容</strong>：用 Sonnet 生成简短观点 + 配图描述</li>
+<li><strong>Gemini-3-Pro 生成配图</strong>：自动生成吸引眼球的图片</li>
+<li><strong>自动发布</strong>：通过浏览器自动化发到多平台</li>
+<li><strong>变现</strong>：广告分成 / 引流到自己的产品</li>
+</ol>
+<h4>💡 推荐垂直领域</h4>
+<ul>
+<li><strong>AI 工具评测</strong>：每天发现新 AI 工具，自动写评测</li>
+<li><strong>独立开发者新闻</strong>：监控 Product Hunt / Hacker News / Indie Hackers</li>
+<li><strong>股市速报</strong>：每日 A股/港股/美股 AI 解读</li>
+</ul>
+<pre># cron 示例：每天 9:00/14:00/20:00 北京时间
+cron add --schedule "0 1,6,12 * * *" \
+  --payload '{"kind":"agentTurn","message":"扫描 RSS，生成内容，发布到 X 和小红书"}' \
+  --sessionTarget isolated</pre>
+<div class="source">来源：Reddit r/passive_income、实践经验</div>
+</div></div>
+
+<div class="card" data-id="s5"><div class="card-head"><span class="emoji">🎥</span><div class="info"><div class="title">无人脸视频号（Faceless）</div><div class="subtitle">AI 生成视频 → 自动发布 TikTok/YouTube Shorts → 广告收益</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $500-5000/月</span><span class="tag tag-effort">⚙️ 中等努力</span><span class="tag tag-auto">🤖 80%自动化</span></div>
+<div class="card-body">
+<div class="highlight"><p>Reddit 上有人报告用 AI 内容 + TikTok 每月 $500-5000，工具链：Veo3 + ElevenLabs + FFmpeg。</p></div>
+<ul>
+<li><strong>流程</strong>：cron 触发 → AI 写脚本 → veo3 生成视频 → FFmpeg 后期 → 浏览器自动发布</li>
+<li><strong>领域</strong>：科技解读、股市分析、历史故事、AI 新闻</li>
+<li>你已有 FFmpeg 技能和 TikTok 发布经验（TryHair）</li>
+</ul>
+<div class="source">来源：Reddit r/passive_income 多篇帖子</div>
+</div></div>
+
+<div class="card" data-id="s6"><div class="card-head"><span class="emoji">✨</span><div class="info"><div class="title">产品增长黑客机器人</div><div class="subtitle">自动监控竞品、发现用户痛点、生成并发布推广内容</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 间接收益</span><span class="tag tag-auto">🤖 95%自动化</span><span class="tag tag-fit">🎯 你的 TryHair</span></div>
+<div class="card-body">
+<div class="highlight"><p>SiteGPT 创始人用 OpenClaw 代理集群做营销，单人 MRR $13K。你可以复制这个模式给 TryHair。</p></div>
+<ul>
+<li><strong>竞品监控</strong>：每天扫描竞品网站/社交媒体，发现变化</li>
+<li><strong>用户痛点挖掘</strong>：监控 Reddit/Twitter 上相关关键词，发现用户抱怨</li>
+<li><strong>自动回复</strong>：在相关讨论中自然推荐你的产品</li>
+<li><strong>SEO 内容</strong>：自动生成博客文章、工具页面引流</li>
+</ul>
+<div class="source">来源：superframeworks.com SiteGPT 案例</div>
+</div></div>
+</div>
+
+<!-- === 第三类：服务变现 === -->
+<div class="section">
+<div class="section-header"><span class="icon">💼</span><h2>第三类：服务变现（自动化代理服务）</h2><span class="badge badge-adv">高利润但需要客户</span></div>
+
+<div class="card" data-id="s7"><div class="card-head"><span class="emoji">🤖</span><div class="info"><div class="title">自动化代理服务（AI Automation Agency）</div><div class="subtitle">为企业客户建设定制化自动化工作流</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $500-5000/月/客户</span><span class="tag tag-effort">⚙️ 高努力</span><span class="tag tag-time">⏰ 2-4周启动</span></div>
+<div class="card-body">
+<div class="highlight"><p>markaicode.com 报道：企业愿意为每周省 10+小时的自动化支付 $500-5000/月，你的 API 成本只有 $50/月。</p></div>
+<h4>高价值场景</h4>
+<ul>
+<li><strong>发票/账单自动化</strong>：自动分析发票、生成报表、优化成本（Reddit 有成功案例）</li>
+<li><strong>社交媒体代运营</strong>：内容生成 + 定时发布 + 互动回复</li>
+<li><strong>客户服务机器人</strong>：接入微信/WhatsApp，自动回复常见问题</li>
+<li><strong>研报自动生成</strong>：定期生成行业研究报告</li>
+</ul>
+<div class="source">来源：Reddit r/AI_Agents、markaicode.com</div>
+</div></div>
+
+<div class="card" data-id="s8"><div class="card-head"><span class="emoji">🎓</span><div class="info"><div class="title">OpenClaw 培训/社区（知识付费）</div><div class="subtitle">教其他人用 OpenClaw，卖课程/社区会员</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $29-99/月×N人</span><span class="tag tag-effort">⚙️ 中等努力</span></div>
+<div class="card-body">
+<div class="highlight"><p>Reddit r/AskVibecoders 报道：订阅社区 $29-99/月，年费 $297-997。收入随受众规模增长。</p></div>
+<ul>
+<li>你刚完成的学习指南就是现成的课程内容</li>
+<li>可以开 Discord/Telegram 付费社区</li>
+<li>写系列教程发布到小红书/微信公众号</li>
+</ul>
+<div class="source">来源：Reddit r/AskVibecoders</div>
+</div></div>
+</div>
+
+<!-- === 第四类：Wilson专属 === -->
+<div class="section">
+<div class="section-header"><span class="icon">🎯</span><h2>第四类：为 Wilson 定制的方案</h2><span class="badge badge-you">基于你的技能和资源</span></div>
+
+<div class="card" data-id="s9"><div class="card-head"><span class="emoji">📈</span><div class="info"><div class="title">投资研报自动化 + 知识付费</div><div class="subtitle">用 OpenClaw 自动生成股市分析，发布到付费专栏</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 $500-3000/月</span><span class="tag tag-fit">🎯 完美匹配你的背景</span><span class="tag tag-auto">🤖 85%自动化</span></div>
+<div class="card-body">
+<div class="highlight"><p>你已有：stock-market-pro 技能、A股自选股监控、投资经验。把这些产品化。</p></div>
+<h4>📝 具体流程</h4>
+<ol>
+<li>cron 每日开盘前自动扫描自选股 + 行业新闻</li>
+<li>AI 生成市场分析报告（包含技术面+消息面+资金面）</li>
+<li>自动发布到微信公众号/知识星球/小红书</li>
+<li>免费版引流，付费版深度分析</li>
+</ol>
+<h4>变现模式</h4>
+<ul>
+<li>知识星球 ¥199/年 × 200人 = ¥39,800/年</li>
+<li>小红书付费专栏</li>
+<li>微信订阅号打赏 + 广告</li>
+</ul>
+</div></div>
+
+<div class="card" data-id="s10"><div class="card-head"><span class="emoji">💇</span><div class="info"><div class="title">TryHair 自动增长引擎</div><div class="subtitle">用 OpenClaw 自动化 TryHair 的整个营销漏斗</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 间接收益（用户增长）</span><span class="tag tag-auto">🤖 90%自动化</span><span class="tag tag-fit">🎯 已有基础</span></div>
+<div class="card-body">
+<div class="highlight"><p>你已经在做这个！只需要系统化：</p></div>
+<ol>
+<li><strong>竞品监控</strong>：每天扫描 "AI hairstyle" 相关讨论</li>
+<li><strong>内容矩阵</strong>：自动生成发型灵感图 + 文案，发布到5个平台</li>
+<li><strong>SEO 内容</strong>：自动生成博客文章（"2026年流行发型"、"AI 发型预览"）</li>
+<li><strong>用户反馈分析</strong>：自动收集和分析用户反馈，生成产品改进报告</li>
+</ol>
+</div></div>
+
+<div class="card" data-id="s11"><div class="card-head"><span class="emoji">🔧</span><div class="info"><div class="title">自动化外包接单助手</div><div class="subtitle">自动监控 Upwork/威客的合适项目，自动生成投标书</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 间接收益</span><span class="tag tag-auto">🤖 70%自动化</span><span class="tag tag-time">⏰ 3天启动</span></div>
+<div class="card-body">
+<ul>
+<li>cron 每小时扫描 Upwork/威客 新项目（AI、前端、产品类）</li>
+<li>AI 分析项目匹配度 + 自动生成投标书草稿</li>
+<li>Telegram 推送筛选结果，你只需点击"提交"</li>
+</ul>
+</div></div>
+
+<div class="card" data-id="s12"><div class="card-head"><span class="emoji">🎰</span><div class="info"><div class="title">套利/信息差自动化</div><div class="subtitle">自动发现并执行信息不对称机会</div></div><span class="arrow">▶</span></div>
+<div class="tags"><span class="tag tag-money">💰 变动大</span><span class="tag tag-effort">⚙️ 高努力高风险</span><span class="tag tag-auto">🤖 60%自动化</span></div>
+<div class="card-body">
+<ul>
+<li><strong>跨平台价格监控</strong>：监控同一商品在不同平台的价差（拼多多 vs 淘宝 vs 1688）</li>
+<li><strong>域名/账号交易</strong>：自动扫描低价域名，判断潜在价值</li>
+<li><strong>优惠券监控</strong>：自动发现并抢购限时优惠</li>
+</ul>
+<p style="color:var(--yellow);font-size:.82em">⚠️ 注意：部分场景可能涉及平台规则风险，谨慎操作</p>
+</div></div>
+</div>
+
+<!-- === 警告 === -->
+<div class="warning">
+<h3>⚠️ 诚实警告：必须看的风险提示</h3>
+<ul>
+<li><strong>大多数"快速赚钱"教程是卖铲子的</strong>：$9.95 的 "playbook" 和 $297 的课程本身就是“教你赚钱”的商业模式</li>
+<li><strong>API 成本是真实的</strong>：自动化流程每月 $50-100 API 费，收入必须覆盖成本</li>
+<li><strong>平台风险真实存在</strong>：OpenClaw 是一个人的开源项目，341 个恶意技能已被发现</li>
+<li><strong>不要全职押注</strong>：先以副业心态试，验证可行后再扩大</li>
+<li>Reddit r/Entrepreneur 高赞回复：<em>"AI doesn't make money. Solving problems makes money. AI is just a tool."</em></li>
+</ul>
+</div>
+
+<!-- === 行动路线图 === -->
+<div class="roadmap">
+<h2>🚦 推荐行动路线图（为 Wilson 定制）</h2>
+
+<div class="step"><div class="num">1</div><div class="content"><h4>本周：内容自动化先跑起来</h4><p>用 cron + rss-ai-reader + X发布技能，搭建一个自动内容号（独立开发者新闻/AI工具评测）。成本 ≈ $0（用现有基础设施）。</p></div></div>
+
+<div class="step"><div class="num">2</div><div class="content"><h4>第二周：TryHair 增长自动化</h4><p>系统化你已有的社交媒体发布流程，加上竞品监控和 SEO 内容自动生成。直接拉动 TryHair 收入。</p></div></div>
+
+<div class="step"><div class="num">3</div><div class="content"><h4>第三周：投资研报自动化</h4><p>把你的股市监控产品化，免费版引流，付费版用知识星球或小红书付费专栏变现。</p></div></div>
+
+<div class="step"><div class="num">4</div><div class="content"><h4>第四周+：选择性扩展</h4><p>根据前 3 周的数据，决定是深入内容变现、技能市场、还是服务变现。数据驱动决策，不拍脑袋。</p></div></div>
+</div>
+
+<div class="footer">
+<p>调研数据源：<a href="https://superframeworks.com/articles/openclaw-business-ideas-indie-hackers" target="_blank">Superframeworks</a> · <a href="https://markaicode.com/openclaw-money-making-automations-2026/" target="_blank">Markaicode</a> · <a href="https://www.reddit.com/r/AskVibecoders/" target="_blank">Reddit r/AskVibecoders</a> · <a href="https://www.reddit.com/r/AI_Agents/" target="_blank">Reddit r/AI_Agents</a> · <a href="https://www.reddit.com/r/passive_income/" target="_blank">Reddit r/passive_income</a></p>
+<p style="margin-top:10px">🦞 为 Wilson 定制 · 2026-02-11 · 基于 GitHub/Reddit/Twitter/技术博客深度调研</p>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.card-head').forEach(h=>{h.addEventListener('click',()=>h.closest('.card').classList.toggle('open'))});
+</script>
+</body></html>
